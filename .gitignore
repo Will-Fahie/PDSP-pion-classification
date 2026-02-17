@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data (large pickle files)
+extracted-data-hit/
+
+# OS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/

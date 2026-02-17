@@ -1,0 +1,8 @@
+numpy
+matplotlib
+scikit-learn
+torch
+pandas
+seaborn
+xgboost
+awkward

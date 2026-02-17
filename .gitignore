@@ -9,6 +9,7 @@ __pycache__/
 
 # Data (large pickle files)
 extracted-data-hit/
+extracted-data-summary/
 
 # OS
 .DS_Store
@@ -16,3 +17,6 @@ extracted-data-hit/
 # IDE
 .vscode/
 .idea/
+
+# Claude
+.claude/

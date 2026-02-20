@@ -1,4 +1,3 @@
-"""Utility functions for pion classification neural network."""
 import numpy as np
 import pickle
 from sklearn.metrics import confusion_matrix

@@ -8,8 +8,12 @@ __pycache__/
 .ipynb_checkpoints/
 
 # Data (large pickle files)
-extracted-data-hit/
-extracted-data-summary/
+extracted-data/
+prepared-data/
+
+# Plots
+plots/
+
 
 # OS
 .DS_Store

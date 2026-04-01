@@ -22,5 +22,10 @@ plots/
 .vscode/
 .idea/
 
+# Misc
+misc/
+*.pdf
+*.png
+
 # Claude
 .claude/

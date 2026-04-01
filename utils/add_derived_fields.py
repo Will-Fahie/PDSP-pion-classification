@@ -1,7 +1,7 @@
 """
-Add derived fields to ALL_DATA.pkl:
+Loads data.pkl, adds derived fields, and saves to data_new.pkl:
 
-  track_ID  1-indexed integer identifier for each track
+  PFO_ID    1-indexed integer identifier for each PFO
   b         impact parameter, float64, cm
               b = ||(beam_end_pos - shower_start_pos) x shower_direction||
   d         photon travel distance, float64, cm
@@ -22,8 +22,11 @@ Usage:
 import os
 import pickle
 import numpy as np
+import pandas as pd
 
-DATA_PATH = os.path.join(os.path.dirname(__file__), '..', 'extracted-data', 'ALL_DATA.pkl')
+
+DATA_PATH_IN  = os.path.join(os.path.dirname(__file__), '..', 'extracted-data', 'extracted_data.pkl')
+DATA_PATH_OUT = os.path.join(os.path.dirname(__file__), '..', 'extracted-data', 'data_new.pkl')
 
 # Energy correction parameters
 P0, P1, P2 = 0.1566, 26.0, -1.073
@@ -57,37 +60,44 @@ def corrected_energy(E):
 
 
 def main():
-    print(f"Loading {DATA_PATH} ...")
-    with open(DATA_PATH, 'rb') as f:
-        data = pickle.load(f)
-    print(f"Loaded {len(data):,} tracks")
+
+    print(f"Loading {DATA_PATH_IN} ...")
+    with open(DATA_PATH_IN, 'rb') as f:
+        raw = pickle.load(f)
+
+    if isinstance(raw, pd.DataFrame):
+        data = raw.to_dict('records')
+    else:
+        data = raw
+    print(f"Loaded {len(data):,} PFOs")
 
     has_energy = 'shower_energy' in data[0]
 
-    for track_id, track in enumerate(data, start=1):
-        track['track_ID'] = track_id
+    for pfo_id, pfo in enumerate(data, start=1):
+        pfo['PFO_ID'] = pfo_id
 
-        L = track['sequence_length']
-        track['dEdX_median'] = float(np.median(track['dEdX_sequence'][:L]))
+        L = pfo['sequence_length']
+        pfo['dEdX_median'] = float(np.median(pfo['dEdX_sequence'][:L]))
 
-        beam  = xyz(track['beam_end_pos'])
-        s_pos = xyz(track['shower_start_pos'])
-        s_dir = xyz(track['shower_direction'])
+        beam  = xyz(pfo['beam_end_pos'])
+        s_pos = xyz(pfo['shower_start_pos'])
+        s_dir = xyz(pfo['shower_direction'])
 
-        track['b'] = impact_parameter(beam, s_pos, s_dir)
-        track['d'] = travel_distance(beam, s_pos)
+        pfo['b'] = impact_parameter(beam, s_pos, s_dir)
+        pfo['d'] = travel_distance(beam, s_pos)
 
         if has_energy:
-            track['E_c'] = corrected_energy(float(track['shower_energy']))
+            pfo['E_c'] = corrected_energy(float(pfo['shower_energy']))
 
-    print("Saving ...")
-    with open(DATA_PATH, 'wb') as f:
+    print(f"Saving to {DATA_PATH_OUT} ...")
+    with open(DATA_PATH_OUT, 'wb') as f:
         pickle.dump(data, f)
 
-    added = "track_ID, dEdX_median, b, d" + (", E_c" if has_energy else "")
-    print(f"Done — updated {len(data):,} tracks with: {added}")
+    added = "PFO_ID, dEdX_median, b, d" + (", E_c" if has_energy else "")
+    print(f"Done — updated {len(data):,} PFOs with: {added}")
     if not has_energy:
         print("  Note: 'shower_energy' not found in data — E_c was not computed.")
+
 
 
 if __name__ == '__main__':

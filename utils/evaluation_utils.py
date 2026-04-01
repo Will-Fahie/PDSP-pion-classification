@@ -23,18 +23,21 @@ def plot_training_curves(history, title=''):
     axes[0].set_ylabel('Loss')
     axes[0].legend()
     axes[0].set_title(f'{prefix}Loss')
+    axes[0].grid(True, alpha=0.3)
 
     axes[1].plot([100 * p for p in history['purity']])
     axes[1].set_xlabel('Epoch')
     axes[1].set_ylabel('%')
     axes[1].set_title(f'{prefix}Purity (threshold=0.5)')
     axes[1].set_ylim([0, 100])
+    axes[1].grid(True, alpha=0.3)
 
     axes[2].plot([100 * e for e in history['efficiency']])
     axes[2].set_xlabel('Epoch')
     axes[2].set_ylabel('%')
     axes[2].set_title(f'{prefix}Efficiency (threshold=0.5)')
     axes[2].set_ylim([0, 100])
+    axes[2].grid(True, alpha=0.3)
 
     plt.tight_layout()
     plt.show()
@@ -72,15 +75,16 @@ def optimise_threshold(probs, labels, label='Model', color='steelblue'):
 
     # Plot threshold vs purity and efficiency
     fig, ax = plt.subplots(figsize=(8, 5))
-    ax.plot(thresholds, 100 * purities_scan, color=color,        label='Purity')
+    ax.plot(thresholds, 100 * purities_scan, color=color,          label='Purity')
     ax.plot(thresholds, 100 * effs_scan,     color=color, ls='--', label='Efficiency')
-    ax.plot(thresholds, 100 * product,       color='grey',  ls=':', label='Purity \u00d7 Efficiency')
+    ax.plot(thresholds, 100 * product,       color='grey', ls=':',  label='Purity \u00d7 Efficiency')
     ax.axvline(best_threshold, color='red', ls=':', lw=1.5,
                label=f'Optimal threshold ({best_threshold:.2f})')
-    ax.set_xlabel('Classification Threshold', fontsize=12)
-    ax.set_ylabel('%', fontsize=12)
-    ax.set_title(f'{label} \u2014 Threshold Optimisation', fontsize=12)
-    ax.legend(fontsize=10)
+    ax.set_xlabel('Classification Threshold', fontsize=14)
+    ax.set_ylabel('%', fontsize=14)
+    ax.set_title(f'{label} \u2014 Threshold Optimisation', fontsize=15)
+    ax.legend(fontsize=13)
+    ax.tick_params(labelsize=12)
     ax.set_xlim([0.05, 0.95])
     ax.set_ylim([0, 100])
     plt.tight_layout()
@@ -175,7 +179,7 @@ def plot_roc_and_purity_efficiency(results_list, title=''):
     plt.show()
 
 
-def plot_confusion_matrix(labels, preds, threshold, title='Pion Classification'):
+def plot_confusion_matrix(labels, preds, threshold, title='\u03c0\u00b1 Classification', figsize=(6, 5)):
     """Plot a labelled confusion matrix.
 
     Args:
@@ -183,22 +187,46 @@ def plot_confusion_matrix(labels, preds, threshold, title='Pion Classification')
         preds:     1-D array of predicted binary labels
         threshold: the classification threshold used (shown in the plot title)
         title:     base title for the plot
+        figsize:   tuple (width, height) for the figure
     """
-    cm, info, label_names = create_confusion_matrix(labels, preds)
+    cm, info, raw_names = create_confusion_matrix(labels, preds)
 
-    fig, ax = plt.subplots(figsize=(6, 5))
-    im = ax.imshow(cm, cmap='Blues')
+    # create_confusion_matrix already flips rows once; flip again so pion sits on top
+    cm   = cm[::-1]
+    info = info[::-1]
+
+    # Reorder cell text from count/purity/efficiency → count/efficiency/purity
+    def _swap(s):
+        parts = s.split('\n')   # [count, purity, efficiency]
+        return f'{parts[0]}\n{parts[2]}\n{parts[1]}'
+    info = np.vectorize(_swap)(info)
+
+    _name_map = {'0': 'not pion', '1': 'pion'}
+    display_names = [_name_map.get(n, n) for n in raw_names]
+
+    col_totals = cm.sum(axis=0)
+    row_totals = cm.sum(axis=1)
+
+    fig, ax = plt.subplots(figsize=figsize)
     for i in range(cm.shape[0]):
         for j in range(cm.shape[1]):
+            ax.add_patch(plt.Rectangle((j - 0.5, i - 0.5), 1, 1,
+                                       fill=False, edgecolor='black', lw=1))
             ax.text(j, i, info[i][j], ha='center', va='center', fontsize=9)
-    ax.set_xticks(range(len(label_names)))
-    ax.set_yticks(range(len(label_names)))
-    ax.set_xticklabels(label_names)
-    ax.set_yticklabels(label_names[::-1])
-    ax.set_xlabel('Predicted')
-    ax.set_ylabel('True')
-    ax.set_title(f'{title} (threshold={threshold:.2f})')
-    plt.colorbar(im)
+
+    ax.set_xlim(-0.5, cm.shape[1] - 0.5)
+    ax.set_ylim(-0.5, cm.shape[0] - 0.5)
+
+    x_tick_labels = [f'{display_names[j]}\n({col_totals[j]:,})' for j in range(len(display_names))]
+    y_tick_labels = [f'{display_names[i]}\n({row_totals[i]:,})' for i in range(len(display_names))]
+
+    ax.set_xticks(range(len(display_names)))
+    ax.set_yticks(range(len(display_names)))
+    ax.set_xticklabels(x_tick_labels, rotation=30, ha='right',              fontsize=10)
+    ax.set_yticklabels(y_tick_labels, rotation=30, ha='right', va='center', fontsize=10)
+    ax.set_xlabel('Predicted', fontsize=11)
+    ax.set_ylabel('True',      fontsize=11)
+    ax.set_title(f'{title} (threshold={threshold:.2f})', fontsize=12)
     plt.tight_layout()
     plt.show()
 

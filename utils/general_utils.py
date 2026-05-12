@@ -3,99 +3,61 @@ import pickle
 from sklearn.metrics import confusion_matrix
 
 
-def load_file(file_path):
-    """Load the data from a pickle file."""
-    with open(file_path, "rb") as f:
+def load_file(path):
+    with open(path, "rb") as f:
         return pickle.load(f)
 
 
-def count_instances_in_list(list, X: list):
-    """Count the number of particles of a given type (or set of types) in a list."""
-    count = 0
-    for item in list:
-        if item in X:
-            count += 1
-    return count
+def _count_in(seq, allowed):
+    return sum(1 for x in seq if x in allowed)
 
 
-def classify_X_as_Y(list_a, list_b, X: list, Y: list):
-    """Count the number of times a particle of type X is identified as a particle of type Y."""
-    X_as_Y = 0
-    if type(list_a) != list:
-        list_a = list_a.tolist()
-    if type(list_b) != list:
-        list_b = list_b.tolist()
-    for i in range(len(list_a)):
-        if list_a[i] in X and list_b[i] in Y:
-            X_as_Y += 1
-    return X_as_Y
+def _confusion_count(y_pred, y_true, pred_set, true_set):
+    if not isinstance(y_pred, list):
+        y_pred = list(y_pred)
+    if not isinstance(y_true, list):
+        y_true = list(y_true)
+    return sum(1 for p, t in zip(y_pred, y_true) if p in pred_set and t in true_set)
 
 
-def calculate_uncertainty(k, n):
-    """Calculate uncertainty for a metric."""
-    metric = k / n
-    uncertainty = np.sqrt(metric * (1 - metric) / n)
-    return uncertainty
+def _binomial_unc(k, n):
+    p = k / n
+    return np.sqrt(p * (1 - p) / n)
 
 
-def purity(y_pred, y_test, identified_particles: list, true_particles: list, return_uncertainty=False):
-    """Calculate purity - ratio of correctly identified particles to total identified particles."""
-    matched = classify_X_as_Y(y_pred, y_test, identified_particles, true_particles)
-    total_identified = count_instances_in_list(y_pred, identified_particles)
-
-    if total_identified == 0:
-        if return_uncertainty:
-            return 0, 0
-        else:
-            return 0
-    else:
-        if return_uncertainty:
-            return matched / total_identified, calculate_uncertainty(matched, total_identified)
-        else:
-            return matched / total_identified
+def purity(y_pred, y_true, pred_set, true_set, return_uncertainty=False):
+    matched = _confusion_count(y_pred, y_true, pred_set, true_set)
+    n_pred = _count_in(y_pred, pred_set)
+    if n_pred == 0:
+        return (0, 0) if return_uncertainty else 0
+    val = matched / n_pred
+    return (val, _binomial_unc(matched, n_pred)) if return_uncertainty else val
 
 
-def efficiency(y_pred, y_test, identified_particles: list, true_particles: list, return_uncertainty=False):
-    """Calculate efficiency - ratio of correctly identified particles to total real particles."""
-    matched = classify_X_as_Y(y_pred, y_test, identified_particles, true_particles)
-    total_real = count_instances_in_list(y_test, true_particles)
-    if total_real == 0:
-        if return_uncertainty:
-            return 0, 0
-        else:
-            return 0
-    else:
-        if return_uncertainty:
-            return matched / total_real, calculate_uncertainty(matched, total_real)
-        else:
-            return matched / total_real
+def efficiency(y_pred, y_true, pred_set, true_set, return_uncertainty=False):
+    matched = _confusion_count(y_pred, y_true, pred_set, true_set)
+    n_true = _count_in(y_true, true_set)
+    if n_true == 0:
+        return (0, 0) if return_uncertainty else 0
+    val = matched / n_true
+    return (val, _binomial_unc(matched, n_true)) if return_uncertainty else val
 
 
-def create_confusion_matrix(y_test, y_pred):
-    """Create confusion matrix with purity and efficiency information."""
-    labels = sorted(list(set(list(y_test)) | set(list(y_pred))))
-    labels = [str(label) for label in labels]
-    y_test = [str(label) for label in y_test]
-    y_pred = [str(label) for label in y_pred]
-    cm = confusion_matrix(y_test, y_pred, labels=labels)
-    purities = []
-    efficiencies = []
-    counts = cm.flatten()
+def create_confusion_matrix(y_true, y_pred):
+    classes = sorted({*y_true, *y_pred})
+    classes = [str(c) for c in classes]
+    y_true = [str(x) for x in y_true]
+    y_pred = [str(x) for x in y_pred]
 
-    for true_particle in range(len(labels)):
-        for predicted_particle in range(len(labels)):
-            pur, pur_uncertainty = purity(y_pred, y_test, [labels[predicted_particle]], [labels[true_particle]], return_uncertainty=True)
-            purity_ = f"{100*pur:.1f} ± {100*pur_uncertainty:.1f}%"
-            eff, eff_uncertainty = efficiency(y_pred, y_test, [labels[predicted_particle]], [labels[true_particle]], return_uncertainty=True)
-            efficiency_ = f"{100*eff:.1f} ± {100*eff_uncertainty:.1f}%"
-            purities.append(purity_)
-            efficiencies.append(efficiency_)
+    cm = confusion_matrix(y_true, y_pred, labels=classes)
+    cells = []
+    for i, t in enumerate(classes):
+        for j, p in enumerate(classes):
+            pur, dp = purity(y_pred, y_true, [p], [t], return_uncertainty=True)
+            eff, de = efficiency(y_pred, y_true, [p], [t], return_uncertainty=True)
+            cells.append(
+                f"{cm[i, j]}\n{100*pur:.1f} ± {100*dp:.1f}%\n{100*eff:.1f} ± {100*de:.1f}%"
+            )
 
-    info = zip(counts, purities, efficiencies)
-    info = [f"{v1}\n{v2}\n{v3}" for v1, v2, v3 in info]
-    info = np.asarray(info).reshape(cm.shape)
-
-    cm = cm[::-1]
-    info = info[::-1]
-
-    return cm, info, labels
+    info = np.asarray(cells).reshape(cm.shape)
+    return cm[::-1], info[::-1], classes

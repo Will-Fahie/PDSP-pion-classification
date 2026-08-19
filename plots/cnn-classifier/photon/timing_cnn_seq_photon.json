@@ -1,0 +1,17 @@
+{
+  "seconds": 1872.1645877130795,
+  "epochs": 19,
+  "s_per_epoch": 98.5349783006884,
+  "best_val_loss": 0.0939184791286814,
+  "model": "cnn",
+  "target": "photon",
+  "tag": "seq",
+  "features": [],
+  "n_summary": 0,
+  "device": "cpu",
+  "threads": 8,
+  "n_train": 507265,
+  "n_test": 126817,
+  "batch_size": 256,
+  "seed": 42
+}

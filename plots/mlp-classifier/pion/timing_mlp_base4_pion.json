@@ -1,0 +1,22 @@
+{
+  "seconds": 369.89799498813227,
+  "epochs": 28,
+  "s_per_epoch": 13.21064267814758,
+  "best_val_loss": 0.12428940803803583,
+  "model": "mlp",
+  "target": "pion",
+  "tag": "base4",
+  "features": [
+    "track_chi2/ndof_proton",
+    "track_length",
+    "track_score",
+    "dEdX_median"
+  ],
+  "n_summary": 4,
+  "device": "cpu",
+  "threads": 8,
+  "n_train": 507265,
+  "n_test": 126817,
+  "batch_size": 256,
+  "seed": 42
+}

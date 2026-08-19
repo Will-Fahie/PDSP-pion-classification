@@ -1,0 +1,26 @@
+{
+  "seconds": 6333.403475802159,
+  "epochs": 54,
+  "s_per_epoch": 117.28524955189184,
+  "best_val_loss": 0.08585762977600098,
+  "model": "hybrid",
+  "target": "pion",
+  "tag": "all8",
+  "features": [
+    "track_chi2/ndof_proton",
+    "track_length",
+    "track_score",
+    "dEdX_median",
+    "b",
+    "d",
+    "shower_energy",
+    "beam_angle"
+  ],
+  "n_summary": 8,
+  "device": "cpu",
+  "threads": 8,
+  "n_train": 507265,
+  "n_test": 126817,
+  "batch_size": 256,
+  "seed": 42
+}

@@ -1,0 +1,14 @@
+# photon_predictions,hybrid_cnn_mlp_photon.pkl
+# pfo_level_threshold,0.5700
+# pfo_level_purity,60.76
+# pfo_level_efficiency,83.90
+# mass_cut_MeV,225
+# phi_cut_deg,60
+# n_true_pi0,10703
+# n_events,38082
+# n_pfos,126817
+photon_selection,pairing,purity,efficiency,pxe,threshold
+Cut-based,exact,70.85,6.44,4.57,
+ML (hybrid),exact,71.75,9.16,6.57,0.62
+Cut-based,best,68.67,8.25,5.66,
+ML (hybrid),best,59.73,17.54,10.48,0.53

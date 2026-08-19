@@ -1,0 +1,27 @@
+nohup: ignoring input
+======================================================================
+HYBRID  target=pion  tag=base4
+features (4): ['track_chi2/ndof_proton', 'track_length', 'track_score', 'dEdX_median']
+device=cpu  threads=8  seed=42
+======================================================================
+Train: 89,359 signal / 507,265 (17.6%)
+Test:  22,347 signal / 126,817 (17.6%)
+parameters: 42,897
+
+  epoch   1 | train 0.1274 | val 0.1359 | purity 38.3% | efficiency 89.5% | train 38.1% / 89.2%
+  epoch   5 | train 0.1119 | val 0.1326 | purity 38.6% | efficiency 91.4% | train 38.5% / 91.4%
+  epoch  10 | train 0.1091 | val 0.1012 | purity 46.1% | efficiency 85.5% | train 46.0% / 85.6%
+  epoch  15 | train 0.1081 | val 0.1013 | purity 46.1% | efficiency 84.7% | train 45.9% / 84.8%
+  epoch  20 | train 0.1058 | val 0.1045 | purity 44.9% | efficiency 88.0% | train 44.9% / 88.3%
+  epoch  25 | train 0.1047 | val 0.1020 | purity 46.0% | efficiency 87.6% | train 46.0% / 88.0%
+  early stop at epoch 25
+  best validation loss: 0.1012
+  25 epochs in 3231s (129.3s per epoch)
+Saved to /home/pemb7173/PDSP-pion-classification/predictions/predictions-mc/hybrid_cnn_mlp_base4_pion.pkl
+
+======================================================================
+hybrid base4 pion:  AUC 0.895   purity 52.3%   efficiency 77.4%   t=0.54
+  /home/pemb7173/PDSP-pion-classification/predictions/predictions-mc/hybrid_cnn_mlp_base4_pion.pkl
+  /home/pemb7173/PDSP-pion-classification/models/hybrid_cnn_mlp_base4_pion.pt
+  /home/pemb7173/PDSP-pion-classification/plots/hybrid-classifier/pion/history_base4.pkl
+======================================================================

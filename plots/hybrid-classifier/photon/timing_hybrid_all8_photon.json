@@ -1,0 +1,26 @@
+{
+  "seconds": 3690.2245455409866,
+  "epochs": 34,
+  "s_per_epoch": 108.53601604532314,
+  "best_val_loss": 0.0780591294169426,
+  "model": "hybrid",
+  "target": "photon",
+  "tag": "all8",
+  "features": [
+    "track_chi2/ndof_proton",
+    "track_length",
+    "track_score",
+    "dEdX_median",
+    "b",
+    "d",
+    "shower_energy",
+    "beam_angle"
+  ],
+  "n_summary": 8,
+  "device": "cpu",
+  "threads": 8,
+  "n_train": 507265,
+  "n_test": 126817,
+  "batch_size": 256,
+  "seed": 42
+}

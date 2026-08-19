@@ -1,0 +1,27 @@
+nohup: ignoring input
+======================================================================
+MLP  target=pion  tag=base4
+features (4): ['track_chi2/ndof_proton', 'track_length', 'track_score', 'dEdX_median']
+device=cpu  threads=8  seed=42
+======================================================================
+Train: 89,359 signal / 507,265 (17.6%)
+Test:  22,347 signal / 126,817 (17.6%)
+parameters: 801
+
+  epoch   1 | train 0.1432 | val 0.1388 | purity 38.7% | efficiency 85.1% | train 38.5% / 84.6%
+  epoch   5 | train 0.1284 | val 0.1277 | purity 39.6% | efficiency 85.2% | train 39.4% / 84.9%
+  epoch  10 | train 0.1265 | val 0.1279 | purity 39.7% | efficiency 85.8% | train 39.5% / 85.4%
+  epoch  15 | train 0.1261 | val 0.1298 | purity 40.7% | efficiency 84.2% | train 40.4% / 84.0%
+  epoch  20 | train 0.1259 | val 0.1354 | purity 39.8% | efficiency 84.7% | train 39.6% / 84.5%
+  epoch  25 | train 0.1257 | val 0.1259 | purity 40.3% | efficiency 84.8% | train 40.1% / 84.7%
+  early stop at epoch 28
+  best validation loss: 0.1243
+  28 epochs in 370s (13.2s per epoch)
+Saved to /home/pemb7173/PDSP-pion-classification/predictions/predictions-mc/mlp_summary_base4_pion.pkl
+
+======================================================================
+mlp base4 pion:  AUC 0.853   purity 41.0%   efficiency 83.5%   t=0.50
+  /home/pemb7173/PDSP-pion-classification/predictions/predictions-mc/mlp_summary_base4_pion.pkl
+  /home/pemb7173/PDSP-pion-classification/models/mlp_summary_base4_pion.pt
+  /home/pemb7173/PDSP-pion-classification/plots/mlp-classifier/pion/history_base4.pkl
+======================================================================

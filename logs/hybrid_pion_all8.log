@@ -1,0 +1,30 @@
+nohup: ignoring input
+======================================================================
+HYBRID  target=pion  tag=all8
+features (8): ['track_chi2/ndof_proton', 'track_length', 'track_score', 'dEdX_median', 'b', 'd', 'shower_energy', 'beam_angle']
+device=cpu  threads=8  seed=42
+======================================================================
+Train: 89,359 signal / 507,265 (17.6%)
+Test:  22,347 signal / 126,817 (17.6%)
+parameters: 43,025
+
+  epoch   1 | train 0.1188 | val 0.1147 | purity 44.6% | efficiency 88.9% | train 44.4% / 88.4%
+  epoch   5 | train 0.1006 | val 0.1053 | purity 46.5% | efficiency 90.2%
+  epoch  10 | train 0.0972 | val 0.0930 | purity 50.9% | efficiency 88.5%
+  epoch  15 | train 0.0960 | val 0.0866 | purity 54.3% | efficiency 84.7%
+  epoch  20 | train 0.0950 | val 0.0871 | purity 52.3% | efficiency 87.4%
+  epoch  25 | train 0.0937 | val 0.0848 | purity 53.9% | efficiency 87.0%
+  epoch  30 | train 0.0932 | val 0.0938 | purity 49.9% | efficiency 90.5%
+  epoch  35 | train 0.0929 | val 0.0895 | purity 52.1% | efficiency 88.8%
+  epoch  40 | train 0.0922 | val 0.0929 | purity 50.8% | efficiency 89.9%
+  early stop at epoch 40
+  best validation loss: 0.0848
+  40 epochs in 3603s (90.1s per epoch)
+Saved to /home/pemb7173/PDSP-pion-classification/predictions/predictions-mc/hybrid_cnn_mlp_all8_pion.pkl
+
+======================================================================
+hybrid all8 pion:  AUC 0.930   purity 62.9%   efficiency 78.1%   t=0.55
+  /home/pemb7173/PDSP-pion-classification/predictions/predictions-mc/hybrid_cnn_mlp_all8_pion.pkl
+  /home/pemb7173/PDSP-pion-classification/models/hybrid_cnn_mlp_all8_pion.pt
+  /home/pemb7173/PDSP-pion-classification/plots/hybrid-classifier/pion/history_hybrid_all8_pion.pkl
+======================================================================

@@ -1,0 +1,24 @@
+nohup: ignoring input
+======================================================================
+CNN  target=photon  tag=seq
+device=cpu  threads=8  seed=42
+======================================================================
+Train: 77,950 signal / 507,265 (15.4%)
+Test:  19,753 signal / 126,817 (15.6%)
+parameters: 41,601
+
+  epoch   1 | train 0.1184 | val 0.1079 | purity 36.8% | efficiency 91.2%
+  epoch   5 | train 0.1031 | val 0.0972 | purity 38.9% | efficiency 89.3%
+  epoch  10 | train 0.1009 | val 0.1069 | purity 37.9% | efficiency 92.2%
+  epoch  15 | train 0.0993 | val 0.1037 | purity 39.0% | efficiency 91.7%
+  early stop at epoch 19
+  best validation loss: 0.0939
+  19 epochs in 1872s (98.5s per epoch)
+Saved to /home/pemb7173/PDSP-pion-classification/predictions/predictions-mc/cnn_dEdX_seq_photon.pkl
+
+======================================================================
+cnn seq photon:  AUC 0.896   purity 44.2%   efficiency 78.9%   t=0.52
+  /home/pemb7173/PDSP-pion-classification/predictions/predictions-mc/cnn_dEdX_seq_photon.pkl
+  /home/pemb7173/PDSP-pion-classification/models/cnn_dEdX_seq_photon.pt
+  /home/pemb7173/PDSP-pion-classification/plots/cnn-classifier/photon/history_seq.pkl
+======================================================================

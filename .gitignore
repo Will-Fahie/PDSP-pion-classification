@@ -1,3 +1,6 @@
 *.pkl
+*.pdf
 extracted/
 prepared/
+plots/
+predictions/

@@ -1,6 +1,9 @@
 *.pkl
 *.pdf
+plots/
 extracted/
 prepared/
-plots/
+py_export/
+logs/
+models/
 predictions/
